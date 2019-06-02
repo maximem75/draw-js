@@ -16,7 +16,8 @@ export class ColorPicker extends Container {
     this.color_render = null;
     this.color_block_lineX = null;
     this.color_block_lineY = null;
-    this.color_strip_lineY = null;
+    this.label_rgba = null;
+    this.label_code = null;
 
     createStructure(this);
 
@@ -52,10 +53,11 @@ function initColorBlock(color_picker) {
   setColorBlockDimensions(color_picker);
 
   const color_block = color_picker.color_block;
-  color_block.ctx.rect(0, 0, color_block.width, color_block.height);
+  color_block.ctx.rect(0, 0, color_block.dimensions.width, color_block.dimensions.height);
   fillColorBlock(color_picker);
 
   createColorBlockLines(color_picker);
+  updateColorBlock(color_picker);
 }
 
 function initColorStrip(color_picker) {
@@ -71,6 +73,13 @@ function initColorStrip(color_picker) {
   color_picker.color_strip.ctx.fillStyle = grd1;
   color_picker.color_strip.ctx.fill();
 }
+
+function setColorBlockDimensions(color_picker) {
+  const block_dimensions = color_picker.color_block.element.getBoundingClientRect();
+  color_picker.color_block.dimensions = Object.assign(block_dimensions, {});
+}
+
+/********* Create elements methods *********/
 
 function createElement(color_picker) {
   return createNode('div', {
@@ -90,6 +99,7 @@ function createColorBlock() {
       width: data.dimensions.color_block.width,
       height: data.dimensions.color_block.height
     }),
+    dimensions: {},
     ctx: null
   };
 }
@@ -119,59 +129,35 @@ function createColorRender() {
 }
 
 function createColorBlockLines(color_picker) {
-  color_picker.color_block_lineX = createColorBlockLineX(color_picker);
-  color_picker.color_block_lineY = createColorBlockLineY(color_picker);
+  color_picker.color_block_lineX = createLine(getBlockLineXStyle(color_picker));
+  color_picker.color_block_lineY = createLine(getBlockLineYStyle(color_picker));
+
+  color_picker.block_x = Math.ceil(color_picker.color_block.dimensions.width / 2) + color_picker.padding;
+  color_picker.block_y = Math.ceil(color_picker.color_block.dimensions.height / 2) + color_picker.padding;
 
   color_picker.element.appendChild(color_picker.color_block_lineX.element);
   color_picker.element.appendChild(color_picker.color_block_lineY.element);
 }
 
-function createColorBlockLineX(color_picker) {
+function createLine(style) {
   return {
     element: createNode('div', {
       class: 'color-picker-block-line',
-      style: getBlockLineXStyle(color_picker)
+      style
     }),
     x: 0,
     y: 0
   };
 }
 
-function createColorBlockLineY(color_picker) {
-  return {
-    element: createNode('div', {
-      class: 'color-picker-block-line',
-      style: getBlockLineYStyle(color_picker)
-    }),
-    x: 0,
-    y: 0
-  };
-}
-
-function setColorBlockDimensions(color_picker) {
-  const block_dimensions = color_picker.color_block.element.getBoundingClientRect();
-  color_picker.color_block.width  = block_dimensions.width;
-  color_picker.color_block.height = block_dimensions.height;
-  color_picker.color_block.left   = block_dimensions.left;
-  color_picker.color_block.top    = block_dimensions.top;
-  color_picker.color_block.right  = block_dimensions.right;
-  color_picker.color_block.bottom = block_dimensions.bottom;
-}
 
 /********* Color methods *********/
-
-function manageColorBlock(e, color_picker) {
-  updateBlockLinesPositions(e.pageX, e.pageY, color_picker);
-
-  setColor(color_picker.color_block.ctx.getImageData(color_picker.block_x - color_picker.padding, color_picker.block_y - color_picker.padding, 1, 1).data, color_picker);
-  updateRender(color_picker);
-}
 
 function fillColorBlock(color_picker) {
   const block_ctx = color_picker.color_block.ctx;
   const strip_ctx = color_picker.color_strip.ctx;
-  const block_width = color_picker.color_block.width;
-  const block_height = color_picker.color_block.height;
+  const block_width = color_picker.color_block.dimensions.width;
+  const block_height = color_picker.color_block.dimensions.height;
 
   block_ctx.fillStyle = color_picker.color;
   block_ctx.fillRect(0, 0, block_width, block_height);
@@ -193,10 +179,16 @@ function setColor(imageData, color_picker) {
   color_picker.color = `rgba(${imageData[0]}, ${imageData[1]}, ${imageData[2]}, 1)`;
 }
 
-function updateColorStrip(e, color_picker) {
-  setColor(color_picker.color_strip.ctx.getImageData(e.offsetX, e.offsetY, 1, 1).data, color_picker);
-  fillColorBlock(color_picker);
+function updateColorBlock(color_picker) {
+  setColor(color_picker.color_block.ctx.getImageData(color_picker.block_x - color_picker.padding, color_picker.block_y - color_picker.padding, 1, 1).data, color_picker);
   updateRender(color_picker);
+}
+
+function updateColorStrip(e, color_picker) {
+  setColor(color_picker.color_strip.ctx.getImageData(0, e.offsetY, 1, 1).data, color_picker);
+  fillColorBlock(color_picker);
+
+  updateColorBlock(color_picker);
 }
 
 function updateRender(color_picker) {
@@ -207,14 +199,14 @@ function updateRender(color_picker) {
 /********* Block Line methods *********/
 
 function updateBlockLinesPositions(pos_x, pos_y, color_picker) {
-  const minX = pos_x > color_picker.color_block.left ? pos_x : color_picker.color_block.left;
-  const x = minX < color_picker.color_block.right ? minX : color_picker.color_block.right - 0.1;
+  const minX = pos_x > color_picker.color_block.dimensions.left ? pos_x : color_picker.color_block.dimensions.left;
+  const x = minX < color_picker.color_block.dimensions.right ? minX : color_picker.color_block.dimensions.right - 0.1;
 
-  const minY = pos_y > color_picker.color_block.top ? pos_y : color_picker.color_block.top;
-  const y = minY < color_picker.color_block.bottom ? minY : color_picker.color_block.bottom - 0.1;
+  const minY = pos_y > color_picker.color_block.dimensions.top ? pos_y : color_picker.color_block.dimensions.top;
+  const y = minY < color_picker.color_block.dimensions.bottom ? minY : color_picker.color_block.dimensions.bottom - 0.1;
 
-  color_picker.block_x = x - color_picker.color_block.left + color_picker.padding;
-  color_picker.block_y = y - color_picker.color_block.top + color_picker.padding;
+  color_picker.block_x = x - color_picker.color_block.dimensions.left + color_picker.padding;
+  color_picker.block_y = y - color_picker.color_block.dimensions.top + color_picker.padding;
 
   color_picker.color_block_lineX.element.style.left = `${color_picker.block_x}px`;
   color_picker.color_block_lineY.element.style.top = `${color_picker.block_y}px`;
@@ -229,13 +221,18 @@ function addEvents(color_picker) {
 }
 
 function mouseDownColorBlock(e, color_picker) {
-  manageColorBlock(e, color_picker);
+  eventColorBlock(e, color_picker);
 
-  const mousemove_id = on(document.body, 'mousemove', (ev) => manageColorBlock(ev, color_picker));
+  const mousemove_id = on(document.body, 'mousemove', (ev) => eventColorBlock(ev, color_picker));
   const mouseup_id = on(document.body, 'mouseup', () => {
     clearId(mousemove_id);
     clearId(mouseup_id);
   });
+}
+
+function eventColorBlock(e, color_picker) {
+  updateBlockLinesPositions(e.pageX, e.pageY, color_picker);
+  updateColorBlock(color_picker);
 }
 
 function mouseDownColorStrip(e, color_picker) {
@@ -264,15 +261,14 @@ function getRenderStyle() {
 
 function getBlockLineXStyle(color_picker) {
   return `width  : ${data.dimensions.block_lines}px; 
-          height : ${color_picker.color_block.height}px; 
+          height : ${color_picker.color_block.dimensions.height}px; 
           top    : ${data.dimensions.color_picker.padding}px; 
-          left   : ${Math.ceil(color_picker.color_block.width / 2) + color_picker.padding}px;`;
+          left   : ${Math.ceil(color_picker.color_block.dimensions.width / 2) + color_picker.padding}px;`;
 }
 
 function getBlockLineYStyle(color_picker) {
-  return `width  : ${color_picker.color_block.width}px; 
+  return `width  : ${color_picker.color_block.dimensions.width}px; 
           height : ${data.dimensions.block_lines}px; 
-          top    : ${Math.ceil(color_picker.color_block.height / 2) + color_picker.padding}px; 
+          top    : ${Math.ceil(color_picker.color_block.dimensions.height / 2) + color_picker.padding}px; 
           left   : ${data.dimensions.color_picker.padding}px;`;
-
 }

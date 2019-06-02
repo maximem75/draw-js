@@ -40,6 +40,8 @@ function init(draw) {
   draw.grid = new Grid(draw.svg.element, draw.pixel_dimension);
   draw.grid.build(draw.svg.width, draw.svg.height);
 
+  console.log(draw);
+
   const btn_color = draw.menu.getButton('btn_color');
   draw.color_picker = new ColorPicker(draw.element, btn_color.x, (btn_color.y + btn_color.height));
 

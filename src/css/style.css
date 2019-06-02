@@ -30,6 +30,7 @@ body {
 .group-grid-line > line {
     stroke: grey;
     stroke-width: 0.3px;
+    pointer-events: none;
 }
 
 /********* Menu *********/
