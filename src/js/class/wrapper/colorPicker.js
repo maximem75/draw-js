@@ -1,6 +1,6 @@
 import { createNode } from 'dom-js';
 import { on, clearId } from 'custom-event-js';
-import data from '../../common/data';
+import globalData from '../../common/globalData';
 import Container from "./container";
 
 export class ColorPicker extends Container {
@@ -83,7 +83,7 @@ function setColorBlockDimensions(color_picker) {
 
 function createElement(color_picker) {
   return createNode('div', {
-    class: data.class_list.color_picker,
+    class: globalData.class_list.color_picker,
     style: getElementStyle(color_picker)
   }, [
     color_picker.color_block.element,
@@ -95,9 +95,9 @@ function createElement(color_picker) {
 function createColorBlock() {
   return {
     element: createNode('canvas', {
-      class: data.class_list.color_picker_block,
-      width: data.dimensions.color_block.width,
-      height: data.dimensions.color_block.height
+      class: globalData.class_list.color_picker_block,
+      width: globalData.dimensions.color_block.width,
+      height: globalData.dimensions.color_block.height
     }),
     dimensions: {},
     ctx: null
@@ -107,12 +107,12 @@ function createColorBlock() {
 function createColorStrip() {
   return {
     element: createNode('canvas', {
-      class: data.class_list.color_picker_strip,
-      width: data.dimensions.color_strip.width,
-      height: data.dimensions.color_strip.height
+      class: globalData.class_list.color_picker_strip,
+      width: globalData.dimensions.color_strip.width,
+      height: globalData.dimensions.color_strip.height
     }),
-    width: data.dimensions.color_strip.width,
-    height: data.dimensions.color_strip.height,
+    width: globalData.dimensions.color_strip.width,
+    height: globalData.dimensions.color_strip.height,
     ctx: null
   };
 }
@@ -120,11 +120,11 @@ function createColorStrip() {
 function createColorRender() {
   return {
     element: createNode('div', {
-      class: data.class_list.color_render,
+      class: globalData.class_list.color_render,
       style: getRenderStyle()
     }),
-    width: data.dimensions.color_render.width,
-    height: data.dimensions.color_render.height
+    width: globalData.dimensions.color_render.width,
+    height: globalData.dimensions.color_render.height
   };
 }
 
@@ -248,27 +248,27 @@ function mouseDownColorStrip(e, color_picker) {
 /********* Style methods *********/
 
 function getElementStyle(colorPicker) {
-  return `width  : ${data.dimensions.color_picker.width}px;
-          height : ${data.dimensions.color_picker.height}px;
+  return `width  : ${globalData.dimensions.color_picker.width}px;
+          height : ${globalData.dimensions.color_picker.height}px;
           left   : ${colorPicker.x}px;
           top    : ${colorPicker.y}px`;
 }
 
 function getRenderStyle() {
-  return `width  : ${data.dimensions.color_render.width}px;
-          height : ${data.dimensions.color_render.height}px;`;
+  return `width  : ${globalData.dimensions.color_render.width}px;
+          height : ${globalData.dimensions.color_render.height}px;`;
 }
 
 function getBlockLineXStyle(color_picker) {
-  return `width  : ${data.dimensions.block_lines}px; 
+  return `width  : ${globalData.dimensions.block_lines}px; 
           height : ${color_picker.color_block.dimensions.height}px; 
-          top    : ${data.dimensions.color_picker.padding}px; 
+          top    : ${globalData.dimensions.color_picker.padding}px; 
           left   : ${Math.ceil(color_picker.color_block.dimensions.width / 2) + color_picker.padding}px;`;
 }
 
 function getBlockLineYStyle(color_picker) {
   return `width  : ${color_picker.color_block.dimensions.width}px; 
-          height : ${data.dimensions.block_lines}px; 
+          height : ${globalData.dimensions.block_lines}px; 
           top    : ${Math.ceil(color_picker.color_block.dimensions.height / 2) + color_picker.padding}px; 
-          left   : ${data.dimensions.color_picker.padding}px;`;
+          left   : ${globalData.dimensions.color_picker.padding}px;`;
 }

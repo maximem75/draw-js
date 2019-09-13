@@ -1,4 +1,4 @@
-import data from '../../common/data';
+import globalData from '../../common/globalData';
 
 export default class Line {
   constructor(id, x1, y1, x2, y2) {
@@ -18,7 +18,7 @@ Line.generateRowId = (r) => `row_${r}`;
 
 function init(line) {
   line.element = '<line ' +
-   'class = "' + data.class_list.line + '" ' +
+   'class = "' + globalData.class_list.line + '" ' +
    'x1  = "' + line.x1 + '" ' +
    'x2  = "' + line.x2 + '" ' +
    'y1  = "' + line.y1 + '" ' +

@@ -1,6 +1,6 @@
 import { createNode } from 'dom-js';
 import Button from './button';
-import data from '../../common/data';
+import globalData from '../../common/globalData';
 
 export default class Menu {
   constructor(parent) {
@@ -14,7 +14,7 @@ export default class Menu {
       this.element.parentNode.removeChild(this.element);
 
     this.buttons = getButtons(config);
-    this.element = createNode('div', { class: data.class_list.menu }, this.buttons.map(button => button.element));
+    this.element = createNode('div', { class: globalData.class_list.menu }, this.buttons.map(button => button.element));
     this.parent.appendChild(this.element);
     this.updatePositions();
   }

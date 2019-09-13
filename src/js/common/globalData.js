@@ -1,4 +1,4 @@
-const data = {
+const globalData = {
   dimensions: {
     color_picker: {
       width: 185,
@@ -50,4 +50,4 @@ const data = {
   }
 };
 
-export default data;
+export default globalData;

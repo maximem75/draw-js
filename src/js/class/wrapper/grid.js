@@ -2,7 +2,7 @@ import { createSVG, createNode } from "dom-js";
 import Container from "./container";
 import Pixel from "../background/pixel";
 import Line from "../background/line";
-import data from "../../common/data";
+import globalData from "../../common/globalData";
 
 export default class Grid extends Container {
   constructor(parent, pixel_dimension) {
@@ -23,7 +23,7 @@ export default class Grid extends Container {
   }
 
   init() {
-    this.element = createSVG('g', { class: data.class_list.grid });
+    this.element = createSVG('g', { class: globalData.class_list.grid });
     super.init();
   }
 
@@ -39,7 +39,7 @@ export default class Grid extends Container {
   }
 
   buildLines(width, height) {
-    this.group_lines = createSVG('g', { class: data.class_list.group_line });
+    this.group_lines = createSVG('g', { class: globalData.class_list.group_line });
 
     let nodes = '';
     const col_number = Math.ceil(width / this.pixel_dimension);
@@ -69,7 +69,7 @@ export default class Grid extends Container {
   }
 
   buildPixels(width, height) {
-    this.group_pixels = createSVG('g', { class: data.class_list.group_pixel });
+    this.group_pixels = createSVG('g', { class: globalData.class_list.group_pixel });
 
     let nodes = '';
     const array = [];

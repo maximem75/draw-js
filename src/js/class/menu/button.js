@@ -1,6 +1,6 @@
 import { createNode } from 'dom-js';
 import { on } from 'custom-event-js';
-import data from '../../common/data';
+import globalData from '../../common/globalData';
 
 export default class Button {
   constructor(id = null, label, startEvent, stopEvent) {
@@ -28,7 +28,7 @@ export default class Button {
 }
 
 function init(button) {
-  button.element = createNode('span', { class: data.class_list.menu_button }, button.label);
+  button.element = createNode('span', { class: globalData.class_list.menu_button }, button.label);
   on(button.element, 'click', () => {
     if (!button.active) button.startEvent();
     else button.stopEvent();

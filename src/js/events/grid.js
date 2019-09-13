@@ -1,14 +1,14 @@
 import { on, clearId } from 'custom-event-js';
-import data from '../common/data';
+import globalData from '../common/globalData';
 
 export function initGridEvents(draw) {
   draw.handlers.grid = {};
 
-  on(draw.handlers.grid, data.events.grid.hightlight.start, () => startHighlight(draw));
-  on(draw.handlers.grid, data.events.grid.hightlight.stop, () => stopHighlight(draw));
+  on(draw.handlers.grid, globalData.events.grid.hightlight.start, () => startHighlight(draw));
+  on(draw.handlers.grid, globalData.events.grid.hightlight.stop, () => stopHighlight(draw));
 
-  on(draw.handlers.grid, data.events.grid.color.start, () => startColor(draw));
-  on(draw.handlers.grid, data.events.grid.color.stop, () => stopColor(draw));
+  on(draw.handlers.grid, globalData.events.grid.color.start, () => startColor(draw));
+  on(draw.handlers.grid, globalData.events.grid.color.stop, () => stopColor(draw));
 }
 
 function startHighlight(draw) {

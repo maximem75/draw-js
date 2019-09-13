@@ -1,6 +1,6 @@
 import { createNode } from 'dom-js';
 
-import data from '../common/data';
+import globalData from '../common/globalData';
 
 import Container from './wrapper/container';
 import Menu from './menu/menu';
